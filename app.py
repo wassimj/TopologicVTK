@@ -120,7 +120,7 @@ def pyvista_streamlit(plotter):
     st.download_button("Download HTML", html_code, file_name="topologic_pyvista.html", mime='text/plain')
     #html_code = html_file.getvalue().decode('utf-8')
     try:
-        components.html(html_code)
+        components.html(html_code, width=900, height=900)
     except:
         pass
 
@@ -144,9 +144,8 @@ if not c:
         st.session_state['topology'] = c
 if c:
     # Initialize Plotter
-    p = pv.Plotter(window_size= [900, 600], lighting='three lights')
-    _ = p.set_background('grey')
-    _ = p.add_camera_orientation_widget()
+    p = pv.Plotter(window_size=[900, 900], lighting='three lights')
+    _ = p.set_background('lightgrey')
 
     # Retrieve faces from session state
     ex_ve_f, in_ve_f, to_ho_f, bo_ho_f, in_ho_f, ex_in_f, in_in_f, ex_ve_a, in_ve_a, to_ho_a, bo_ho_a, in_ho_a, ex_in_a, in_in_a = st.session_state['faceList']
