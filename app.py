@@ -129,10 +129,13 @@ if 'topology' not in st.session_state:
     st.session_state['topology'] = None
 if 'faceList' not in st.session_state:
     st.session_state['faceList'] = None
+if 'plotter' not in st.session_state:
+    st.session_state['plotter'] = None
 with st.sidebar:
     if st.button('Reset'):
         st.session_state['topology'] = None
         st.session_state['faceList'] = None
+        st.session_state['plotter'] = None
     json_file = st.file_uploader("", type="json", accept_multiple_files=False)
 c = st.session_state['topology']
 faceList = st.session_state['faceList']
@@ -144,82 +147,85 @@ if not c:
         st.session_state['topology'] = c
 if c:
     # Initialize Plotter
-    p = pv.Plotter(window_size=[900, 900], lighting='three lights')
-    _ = p.set_background('lightgrey')
+    p = st.session_state['plotter']
+    if not p:
+        p = pv.Plotter(window_size=[900, 900], lighting='three lights')
+        _ = p.set_background('lightgrey')
+        st.session_state['plotter'] = p
 
-    # Retrieve faces from session state
-    ex_ve_f, in_ve_f, to_ho_f, bo_ho_f, in_ho_f, ex_in_f, in_in_f, ex_ve_a, in_ve_a, to_ho_a, bo_ho_a, in_ho_a, ex_in_a, in_in_a = st.session_state['faceList']
+        # Retrieve faces from session state
+        ex_ve_f, in_ve_f, to_ho_f, bo_ho_f, in_ho_f, ex_in_f, in_in_f, ex_ve_a, in_ve_a, to_ho_a, bo_ho_a, in_ho_a, ex_in_a, in_in_a = st.session_state['faceList']
 
-    # Create Sidebar check boxes for filtering faces
-    with st.sidebar:
-        ex_ve_f_f = st.checkbox("External Vertical Faces", value=True)
-        in_ve_f_f = st.checkbox("Internal Vertical Faces", value=True)
-        to_ho_f_f = st.checkbox("Top Horizontal Faces", value=True)
-        bo_ho_f_f = st.checkbox("Bottom Horizontal Faces", value=True)
-        in_ho_f_f = st.checkbox("Internal Horizontal Faces", value=True)
-        ex_in_f_f = st.checkbox("External Inclined Faces", value=True)
-        in_in_f_f = st.checkbox("Internal Inclined Faces", value=True)
-        apr_f = st.checkbox("Apertures", value=True)
-        mesh_opacity = st.slider("Mesh Opacity", min_value=0.1, max_value=1.0, value=0.5, step=0.1)
+        # Create Sidebar check boxes for filtering faces
+        with st.sidebar:
+            ex_ve_f_f = st.checkbox("External Vertical Faces", value=True)
+            in_ve_f_f = st.checkbox("Internal Vertical Faces", value=True)
+            to_ho_f_f = st.checkbox("Top Horizontal Faces", value=True)
+            bo_ho_f_f = st.checkbox("Bottom Horizontal Faces", value=True)
+            in_ho_f_f = st.checkbox("Internal Horizontal Faces", value=True)
+            ex_in_f_f = st.checkbox("External Inclined Faces", value=True)
+            in_in_f_f = st.checkbox("Internal Inclined Faces", value=True)
+            apr_f = st.checkbox("Apertures", value=True)
+            mesh_opacity = st.slider("Mesh Opacity", min_value=0.1, max_value=1.0, value=0.5, step=0.1)
 
-    # Add face mesh data to plotter
-    north = [0,1,0]
-    if ex_ve_f_f:
-        for f in ex_ve_f:
-            mesh_data = pvMeshByTopology(topology=f)
-            ang, ang_str, color_str = faceAngleFromNorth(f, north)
-            p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-            if apr_f:
-                addApertures(p, f, north)
-    if in_ve_f_f:
-        for f in in_ve_f:
-            mesh_data = pvMeshByTopology(topology=f)
-            ang, ang_str, color_str = faceAngleFromNorth(f, north)
-            p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-            if apr_f:
-                addApertures(p, f, north)
-    if to_ho_f_f:
-        for f in to_ho_f:
-            mesh_data = pvMeshByTopology(topology=f)
-            ang, ang_str, color_str = faceAngleFromNorth(f, north)
-            p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-            if apr_f:
-                addApertures(p, f, north)
-    if bo_ho_f_f:
-        for f in bo_ho_f:
-            mesh_data = pvMeshByTopology(topology=f)
-            ang, ang_str, color_str = faceAngleFromNorth(f, north)
-            p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-            if apr_f:
-                addApertures(p, f, north)
-    if in_ho_f_f:
-        for f in in_ho_f:
-            mesh_data = pvMeshByTopology(topology=f)
-            ang, ang_str, color_str = faceAngleFromNorth(f, north)
-            p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-            if apr_f:
-                addApertures(p, f, north)
-    if ex_in_f_f:
-        for f in ex_in_f:
-            mesh_data = pvMeshByTopology(topology=f)
-            ang, ang_str, color_str = faceAngleFromNorth(f, north)
-            p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-            if apr_f:
-                addApertures(p, f, north)
-    if in_in_f_f:
-        for f in in_in_f:
-            mesh_data = pvMeshByTopology(topology=f)
-            ang, ang_str, color_str = faceAngleFromNorth(f, north)
-            p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-            if apr_f:
-                addApertures(p, f, north)
-    
-    tab1, tab2, tab3 = st.tabs(["3D View", "Report", "Charts"])
-    with tab1:
-        # Draw the 3D view in tab 1
-        p.add_floor('-z', lighting=True, color='white', pad=1.0)
-        p.enable_shadows()
-        pyvista_streamlit(p)
+        # Add face mesh data to plotter
+        north = [0,1,0]
+        if ex_ve_f_f:
+            for f in ex_ve_f:
+                mesh_data = pvMeshByTopology(topology=f)
+                ang, ang_str, color_str = faceAngleFromNorth(f, north)
+                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+                if apr_f:
+                    addApertures(p, f, north)
+        if in_ve_f_f:
+            for f in in_ve_f:
+                mesh_data = pvMeshByTopology(topology=f)
+                ang, ang_str, color_str = faceAngleFromNorth(f, north)
+                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+                if apr_f:
+                    addApertures(p, f, north)
+        if to_ho_f_f:
+            for f in to_ho_f:
+                mesh_data = pvMeshByTopology(topology=f)
+                ang, ang_str, color_str = faceAngleFromNorth(f, north)
+                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+                if apr_f:
+                    addApertures(p, f, north)
+        if bo_ho_f_f:
+            for f in bo_ho_f:
+                mesh_data = pvMeshByTopology(topology=f)
+                ang, ang_str, color_str = faceAngleFromNorth(f, north)
+                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+                if apr_f:
+                    addApertures(p, f, north)
+        if in_ho_f_f:
+            for f in in_ho_f:
+                mesh_data = pvMeshByTopology(topology=f)
+                ang, ang_str, color_str = faceAngleFromNorth(f, north)
+                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+                if apr_f:
+                    addApertures(p, f, north)
+        if ex_in_f_f:
+            for f in ex_in_f:
+                mesh_data = pvMeshByTopology(topology=f)
+                ang, ang_str, color_str = faceAngleFromNorth(f, north)
+                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+                if apr_f:
+                    addApertures(p, f, north)
+        if in_in_f_f:
+            for f in in_in_f:
+                mesh_data = pvMeshByTopology(topology=f)
+                ang, ang_str, color_str = faceAngleFromNorth(f, north)
+                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+                if apr_f:
+                    addApertures(p, f, north)
+        
+        tab1, tab2, tab3 = st.tabs(["3D View", "Report", "Charts"])
+        with tab1:
+            # Draw the 3D view in tab 1
+            p.add_floor('-z', lighting=True, color='white', pad=1.0)
+            p.enable_shadows()
+            pyvista_streamlit(p)
 
     n_walls = []
     s_walls = []
