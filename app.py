@@ -113,7 +113,7 @@ def pyvista_streamlit(plotter):
     plotter.reset_camera_clipping_range()
     #scene = plotter.show(jupyter_backend='pythreejs', return_viewer=True)
     html_file = io.StringIO()
-    plotter.export_html(html_file, backend='pythreejs')
+    plotter.export_html(html_file)
     html_code = html_file.getvalue().decode('utf-8')
     components.html(html_code, height=1000)
 
