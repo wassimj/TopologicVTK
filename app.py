@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 import plotly.graph_objects as go
 import plotly.express as px
 import json
-import nump as np
+import numpy as np
 from numpy import arctan, pi, signbit, arctan2, rad2deg
 from numpy.linalg import norm
 import pandas as pd
