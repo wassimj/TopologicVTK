@@ -1,5 +1,6 @@
 #--------------------------
 # IMPORT LIBRARIES
+import pyvista as pv
 import streamlit as st
 import streamlit.components.v1 as components
 import plotly.graph_objects as go
@@ -9,7 +10,7 @@ import numpy as np
 from numpy import arctan, pi, signbit, arctan2, rad2deg
 from numpy.linalg import norm
 import pandas as pd
-import pyvista as pv
+
 
 # import topologic
 # This requires some checking of the used OS platform to load the correct version of Topologic
