@@ -108,7 +108,7 @@ def pvMeshByTopology(topology=None):
             pv_faces.append(temp_f)
         faces = np.hstack(pv_faces)
         mesh = pv.PolyData(vertices, faces)
-        return (mesh)
+        return mesh
 
 def pyvista_streamlit(plotter):
     mesh = examples.load_uniform()
@@ -122,6 +122,8 @@ def pyvista_streamlit(plotter):
     html_file = open("pyvista.html", 'r', encoding='utf-8')
     html_code = html_file.read()
     st.write(html_code)
+    st.download_button("Download HTML", html_code, file_name="topologic-pyvista.html", mime='text/plain')
+    plotter.export_html('pyvista.html')
     #html_code = html_file.getvalue().decode('utf-8')
     try:
         components.html(html_code, height=1000)
@@ -148,7 +150,7 @@ if not c:
         st.session_state['topology'] = c
 if c:
     # Initialize Plotter
-    p = pv.Plotter(window_size=[900, 600], shape=(9,6))
+    p = pv.Plotter(shape=(1,2))
     p.set_background('white')
 
     # Retrieve faces from session state
