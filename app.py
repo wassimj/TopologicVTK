@@ -111,11 +111,15 @@ def pvMeshByTopology(topology=None):
 
 def pyvista_streamlit(plotter):
     plotter.reset_camera_clipping_range()
-    plotter.export_html('pyvista.html', backend='pythreejs')
+    plotter.export_html('pyvista.html')
     html_file = open("pyvista.html", 'r', encoding='utf-8')
-    html_code = HtmlFile.read() 
+    html_code = html_file.read()
+    st.write(html_code)
     #html_code = html_file.getvalue().decode('utf-8')
-    components.html(html_code, height=1000)
+    try:
+        components.html(html_code, height=1000)
+    except:
+        pass
 
 # Initialize
 if 'topology' not in st.session_state:
