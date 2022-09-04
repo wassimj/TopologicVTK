@@ -110,8 +110,15 @@ def pvMeshByTopology(topology=None):
         return (mesh)
 
 def pyvista_streamlit(plotter):
-    plotter.reset_camera_clipping_range()
-    plotter.export_html('pyvista.html')
+    from pyvista import examples
+    mesh = examples.load_uniform()
+    pyvista.start_xvfb()
+    pl = pyvista.Plotter(shape=(1,2))
+    _ = pl.add_mesh(mesh, scalars='Spatial Point Data', show_edges=True)
+    pl.subplot(0,1)
+    _ = pl.add_mesh(mesh, scalars='Spatial Cell Data', show_edges=True)
+    #plotter.reset_camera_clipping_range()
+    p1.export_html('pyvista.html')
     html_file = open("pyvista.html", 'r', encoding='utf-8')
     html_code = html_file.read()
     st.write(html_code)
