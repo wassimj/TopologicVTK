@@ -111,25 +111,15 @@ def pvMeshByTopology(topology=None):
         return mesh
 
 def pyvista_streamlit(plotter):
-    mesh = examples.load_uniform()
-    pv.start_xvfb()
-    pl = pv.Plotter(shape=(1,2))
-    _ = pl.add_mesh(mesh, scalars='Spatial Point Data', show_edges=True)
-    pl.subplot(0,1)
-    _ = pl.add_mesh(mesh, scalars='Spatial Cell Data', show_edges=True)
-    #plotter.reset_camera_clipping_range()
-    pl.export_html('example_pyvista.html')
-    html_file = open("example_pyvista.html", 'r', encoding='utf-8')
-    html_code = html_file.read()
-    st.download_button("Download HTML", html_code, file_name="example_pyvista.html", mime='text/plain')
-
+    if os.path.exists("topologic_pyvista.html"):
+        os.remove("topologic_pyvista.html")
     plotter.export_html('topologic_pyvista.html')
     html_file = open("topologic_pyvista.html", 'r', encoding='utf-8')
     html_code = html_file.read()
     st.download_button("Download HTML", html_code, file_name="topologic_pyvista.html", mime='text/plain')
     #html_code = html_file.getvalue().decode('utf-8')
     try:
-        components.html(html_code, height=1000)
+        components.html(html_code)
     except:
         pass
 
