@@ -127,366 +127,363 @@ def pyvista_streamlit(plotter):
 # Initialize
 if 'topology' not in st.session_state:
     st.session_state['topology'] = None
-if 'faceList' not in st.session_state:
-    st.session_state['faceList'] = None
 if 'plotter' not in st.session_state:
     st.session_state['plotter'] = None
 with st.sidebar:
     if st.button('Reset'):
         st.session_state['topology'] = None
-        st.session_state['faceList'] = None
         st.session_state['plotter'] = None
     json_file = st.file_uploader("", type="json", accept_multiple_files=False)
-c = st.session_state['topology']
-faceList = st.session_state['faceList']
-if not c:
-    if json_file:
-        topologies = TopologyByImportedJSONMK1.processItem(json_file)
-        c = topologies[0]
-        st.session_state['faceList'] = CellComplexDecompose.processItem(c)
-        st.session_state['topology'] = c
-if c:
-    # Initialize Plotter
-    p = st.session_state['plotter']
-    if not p:
-        p = pv.Plotter(window_size=[900, 900], lighting='three lights')
-        _ = p.set_background('lightgrey')
-        st.session_state['plotter'] = p
-
-        # Retrieve faces from session state
-        ex_ve_f, in_ve_f, to_ho_f, bo_ho_f, in_ho_f, ex_in_f, in_in_f, ex_ve_a, in_ve_a, to_ho_a, bo_ho_a, in_ho_a, ex_in_a, in_in_a = st.session_state['faceList']
-
+    if not json_file:
+        st.stop()
+    else:
         # Create Sidebar check boxes for filtering faces
-        with st.sidebar:
-            ex_ve_f_f = st.checkbox("External Vertical Faces", value=True)
-            in_ve_f_f = st.checkbox("Internal Vertical Faces", value=True)
-            to_ho_f_f = st.checkbox("Top Horizontal Faces", value=True)
-            bo_ho_f_f = st.checkbox("Bottom Horizontal Faces", value=True)
-            in_ho_f_f = st.checkbox("Internal Horizontal Faces", value=True)
-            ex_in_f_f = st.checkbox("External Inclined Faces", value=True)
-            in_in_f_f = st.checkbox("Internal Inclined Faces", value=True)
-            apr_f = st.checkbox("Apertures", value=True)
-            mesh_opacity = st.slider("Mesh Opacity", min_value=0.1, max_value=1.0, value=0.5, step=0.1)
+        ex_ve_f_f = st.checkbox("External Vertical Faces", value=True)
+        in_ve_f_f = st.checkbox("Internal Vertical Faces", value=True)
+        to_ho_f_f = st.checkbox("Top Horizontal Faces", value=True)
+        bo_ho_f_f = st.checkbox("Bottom Horizontal Faces", value=True)
+        in_ho_f_f = st.checkbox("Internal Horizontal Faces", value=True)
+        ex_in_f_f = st.checkbox("External Inclined Faces", value=True)
+        in_in_f_f = st.checkbox("Internal Inclined Faces", value=True)
+        apr_f = st.checkbox("Apertures", value=True)
+        mesh_opacity = st.slider("Mesh Opacity", min_value=0.1, max_value=1.0, value=0.5, step=0.1)
 
-        # Add face mesh data to plotter
-        north = [0,1,0]
-        if ex_ve_f_f:
-            for f in ex_ve_f:
-                mesh_data = pvMeshByTopology(topology=f)
-                ang, ang_str, color_str = faceAngleFromNorth(f, north)
-                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-                if apr_f:
-                    addApertures(p, f, north)
-        if in_ve_f_f:
-            for f in in_ve_f:
-                mesh_data = pvMeshByTopology(topology=f)
-                ang, ang_str, color_str = faceAngleFromNorth(f, north)
-                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-                if apr_f:
-                    addApertures(p, f, north)
-        if to_ho_f_f:
-            for f in to_ho_f:
-                mesh_data = pvMeshByTopology(topology=f)
-                ang, ang_str, color_str = faceAngleFromNorth(f, north)
-                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-                if apr_f:
-                    addApertures(p, f, north)
-        if bo_ho_f_f:
-            for f in bo_ho_f:
-                mesh_data = pvMeshByTopology(topology=f)
-                ang, ang_str, color_str = faceAngleFromNorth(f, north)
-                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-                if apr_f:
-                    addApertures(p, f, north)
-        if in_ho_f_f:
-            for f in in_ho_f:
-                mesh_data = pvMeshByTopology(topology=f)
-                ang, ang_str, color_str = faceAngleFromNorth(f, north)
-                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-                if apr_f:
-                    addApertures(p, f, north)
-        if ex_in_f_f:
-            for f in ex_in_f:
-                mesh_data = pvMeshByTopology(topology=f)
-                ang, ang_str, color_str = faceAngleFromNorth(f, north)
-                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-                if apr_f:
-                    addApertures(p, f, north)
-        if in_in_f_f:
-            for f in in_in_f:
-                mesh_data = pvMeshByTopology(topology=f)
-                ang, ang_str, color_str = faceAngleFromNorth(f, north)
-                p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-                if apr_f:
-                    addApertures(p, f, north)
-        
-        tab1, tab2, tab3 = st.tabs(["3D View", "Report", "Charts"])
-        with tab1:
-            # Draw the 3D view in tab 1
-            p.add_floor('-z', lighting=True, color='white', pad=1.0)
-            p.enable_shadows()
-            pyvista_streamlit(p)
+tab1, tab2, tab3 = st.tabs(["3D View", "Report", "Charts"])
+#Try to get the CellComplex
+c = st.session_state['topology']
 
-    n_walls = []
-    s_walls = []
-    e_walls = []
-    w_walls = []
-    ne_walls = []
-    nw_walls = []
-    se_walls = []
-    sw_walls = []
+if not c:
+    topologies = TopologyByImportedJSONMK1.processItem(json_file)
+    c = topologies[0]
+    st.session_state['topology'] = c
+    p = pv.Plotter(window_size=[900, 900], lighting='three lights')
+    _ = p.set_background('lightgrey')
+    st.session_state['plotter'] = p
+else:
+    p = st.session_state['plotter']
+    _ = p.clear()
 
-    n_wall_area = 0
-    s_wall_area = 0
-    e_wall_area = 0
-    w_wall_area = 0
-    ne_wall_area = 0
-    nw_wall_area = 0
-    se_wall_area = 0
-    sw_wall_area = 0
+# Retrieve faces
+ex_ve_f, in_ve_f, to_ho_f, bo_ho_f, in_ho_f, ex_in_f, in_in_f, ex_ve_a, in_ve_a, to_ho_a, bo_ho_a, in_ho_a, ex_in_a, in_in_a = CellComplexDecompose.processItem(c)
 
-    n_apertures = []
-    s_apertures = []
-    e_apertures = []
-    w_apertures = []
-    ne_apertures = []
-    nw_apertures = []
-    se_apertures = []
-    sw_apertures = []
-    
-
-    n_aperture_area = 0
-    s_aperture_area = 0
-    e_aperture_area = 0
-    w_aperture_area = 0
-    
-    ne_aperture_area = 0
-    nw_aperture_area = 0
-    se_aperture_area = 0
-    sw_aperture_area = 0
-    
-
+# Add face mesh data to plotter
+north = [0,1,0]
+if ex_ve_f_f:
     for f in ex_ve_f:
+        mesh_data = pvMeshByTopology(topology=f)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
-        wall_area = topologic.FaceUtility.Area(f)
-        apertures, aperture_area = faceAperturesAndArea(f)
-        if ang_str == "N":
-            n_walls.append(f)
-            n_wall_area = n_wall_area + wall_area
-            n_apertures = n_apertures + apertures
-            n_aperture_area = n_aperture_area + aperture_area
-        elif ang_str == "S":
-            s_walls.append(f)
-            s_wall_area = s_wall_area + wall_area
-            s_apertures = s_apertures + apertures
-            s_aperture_area = s_aperture_area + aperture_area
-        elif ang_str == "E":
-            e_walls.append(f)
-            e_wall_area = e_wall_area + wall_area
-            e_apertures = e_apertures + apertures
-            e_aperture_area = e_aperture_area + aperture_area
-        elif ang_str == "W":
-            w_walls.append(f)
-            w_wall_area = w_wall_area + wall_area
-            w_apertures = w_apertures + apertures
-            w_aperture_area = w_aperture_area + aperture_area
-        elif ang_str == "NE":
-            ne_walls.append(f)
-            ne_wall_area = ne_wall_area + wall_area
-            ne_apertures = ne_apertures + apertures
-            ne_aperture_area = ne_aperture_area + aperture_area
-        elif ang_str == "NW":
-            nw_walls.append(f)
-            nw_wall_area = nw_wall_area + wall_area
-            nw_apertures = nw_apertures + apertures
-            nw_aperture_area = nw_aperture_area + aperture_area
-        elif ang_str == "SE":
-            se_walls.append(f)
-            se_wall_area = se_wall_area + wall_area
-            se_apertures = se_apertures + apertures
-            se_aperture_area = se_aperture_area + aperture_area
-        elif ang_str == "SW":
-            sw_walls.append(f)
-            sw_wall_area = sw_wall_area + wall_area
-            sw_apertures = sw_apertures + apertures
-            sw_aperture_area = sw_aperture_area + aperture_area
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+        if apr_f:
+            addApertures(p, f, north)
+if in_ve_f_f:
+    for f in in_ve_f:
+        mesh_data = pvMeshByTopology(topology=f)
+        ang, ang_str, color_str = faceAngleFromNorth(f, north)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+        if apr_f:
+            addApertures(p, f, north)
+if to_ho_f_f:
+    for f in to_ho_f:
+        mesh_data = pvMeshByTopology(topology=f)
+        ang, ang_str, color_str = faceAngleFromNorth(f, north)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+        if apr_f:
+            addApertures(p, f, north)
+if bo_ho_f_f:
+    for f in bo_ho_f:
+        mesh_data = pvMeshByTopology(topology=f)
+        ang, ang_str, color_str = faceAngleFromNorth(f, north)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+        if apr_f:
+            addApertures(p, f, north)
+if in_ho_f_f:
+    for f in in_ho_f:
+        mesh_data = pvMeshByTopology(topology=f)
+        ang, ang_str, color_str = faceAngleFromNorth(f, north)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+        if apr_f:
+            addApertures(p, f, north)
+if ex_in_f_f:
+    for f in ex_in_f:
+        mesh_data = pvMeshByTopology(topology=f)
+        ang, ang_str, color_str = faceAngleFromNorth(f, north)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+        if apr_f:
+            addApertures(p, f, north)
+if in_in_f_f:
+    for f in in_in_f:
+        mesh_data = pvMeshByTopology(topology=f)
+        ang, ang_str, color_str = faceAngleFromNorth(f, north)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+        if apr_f:
+            addApertures(p, f, north)
 
-    if n_wall_area > 0:
-        n_ap_or = n_aperture_area / n_wall_area * 100
-    else:
-        n_ap_or = 0
-    if s_wall_area > 0:
-        s_ap_or = s_aperture_area / s_wall_area * 100
-    else:
-        s_ap_or = 0
-    if e_wall_area > 0:
-        e_ap_or = e_aperture_area / e_wall_area * 100
-    else:
-        e_ap_or = 0
-    if w_wall_area > 0:
-        w_ap_or = w_aperture_area / w_wall_area * 100
-    else:
-        w_ap_or = 0
-    if ne_wall_area > 0:
-        ne_ap_or = ne_aperture_area / ne_wall_area * 100
-    else:
-        ne_ap_or = 0
-    if nw_wall_area > 0:
-        nw_ap_or = nw_aperture_area / nw_wall_area * 100
-    else:
-        nw_ap_or = 0
-    if se_wall_area > 0:
-        se_ap_or = se_aperture_area / se_wall_area * 100
-    else:
-        se_ap_or = 0
-    if sw_wall_area > 0:
-        sw_ap_or = sw_aperture_area / sw_wall_area * 100
-    else:
-        sw_ap_or = 0
+with tab1:
+    # Draw the 3D view in tab 1
+    p.add_floor('-z', lighting=True, color='white', pad=1.0)
+    p.enable_shadows()
+    pyvista_streamlit(p)
 
-    total_project_wall_area = s_wall_area + n_wall_area + ne_wall_area + nw_wall_area + sw_wall_area + se_wall_area
-    total_project_aperture_area = n_aperture_area + s_aperture_area + e_aperture_area + w_aperture_area + ne_aperture_area + nw_aperture_area + se_aperture_area + sw_aperture_area
-    
-    n_ap_proj = n_aperture_area / total_project_wall_area * 100
-    s_ap_proj = s_aperture_area / total_project_wall_area * 100
-    e_ap_proj = e_aperture_area / total_project_wall_area * 100
-    w_ap_proj = w_aperture_area / total_project_wall_area * 100
-    ne_ap_proj = ne_aperture_area / total_project_wall_area * 100
-    nw_ap_proj = nw_aperture_area / total_project_wall_area * 100
-    se_ap_proj = se_aperture_area / total_project_wall_area * 100
-    sw_ap_proj = sw_aperture_area / total_project_wall_area * 100
-    
-    total_ap_proj_percent = n_ap_proj+s_ap_proj+e_ap_proj+w_ap_proj+ne_ap_proj+nw_ap_proj+se_ap_proj+sw_ap_proj
-    col_labels = ["Orientation", "Window Area", "Wall Area", "WWR By Orientation", "WWR By Project"]
-    d = {"Orientation": ["E", "NE", "N", "NW", "W", "SW", "S", "SE", "Total"],
-        'Window Area': [round(e_aperture_area,2),
-                        round(ne_aperture_area,2),
-                        round(n_aperture_area,2),
-                        round(nw_aperture_area,2),
-                        round(w_aperture_area,2),
-                        round(sw_aperture_area,2),
-                        round(s_aperture_area,2),
-                        round(se_aperture_area,2),
-                        round(total_project_aperture_area,2)],
-        'Wall Area': [round(e_wall_area,2),
-                        round(ne_wall_area,2),
-                        round(n_wall_area,2),
-                        round(nw_wall_area,2),
-                        round(w_wall_area,2),
-                        round(sw_wall_area,2),
-                        round(s_wall_area,2),
-                        round(se_wall_area,2),
-                        round(total_project_wall_area,2)],
-        'WWR By Orientation': [round(e_ap_or,2),
-                                round(ne_ap_or,2),
-                                round(n_ap_or,2),
-                                round(nw_ap_or,2),
-                                round(w_ap_or,2),
-                                round(sw_ap_or,2),
-                                round(s_ap_or,2),
-                                round(se_ap_or,2),
-                                0],
-        'WWR By Project': [round(e_ap_proj,2),
+n_walls = []
+s_walls = []
+e_walls = []
+w_walls = []
+ne_walls = []
+nw_walls = []
+se_walls = []
+sw_walls = []
+
+n_wall_area = 0
+s_wall_area = 0
+e_wall_area = 0
+w_wall_area = 0
+ne_wall_area = 0
+nw_wall_area = 0
+se_wall_area = 0
+sw_wall_area = 0
+
+n_apertures = []
+s_apertures = []
+e_apertures = []
+w_apertures = []
+ne_apertures = []
+nw_apertures = []
+se_apertures = []
+sw_apertures = []
+
+
+n_aperture_area = 0
+s_aperture_area = 0
+e_aperture_area = 0
+w_aperture_area = 0
+
+ne_aperture_area = 0
+nw_aperture_area = 0
+se_aperture_area = 0
+sw_aperture_area = 0
+
+
+for f in ex_ve_f:
+    ang, ang_str, color_str = faceAngleFromNorth(f, north)
+    wall_area = topologic.FaceUtility.Area(f)
+    apertures, aperture_area = faceAperturesAndArea(f)
+    if ang_str == "N":
+        n_walls.append(f)
+        n_wall_area = n_wall_area + wall_area
+        n_apertures = n_apertures + apertures
+        n_aperture_area = n_aperture_area + aperture_area
+    elif ang_str == "S":
+        s_walls.append(f)
+        s_wall_area = s_wall_area + wall_area
+        s_apertures = s_apertures + apertures
+        s_aperture_area = s_aperture_area + aperture_area
+    elif ang_str == "E":
+        e_walls.append(f)
+        e_wall_area = e_wall_area + wall_area
+        e_apertures = e_apertures + apertures
+        e_aperture_area = e_aperture_area + aperture_area
+    elif ang_str == "W":
+        w_walls.append(f)
+        w_wall_area = w_wall_area + wall_area
+        w_apertures = w_apertures + apertures
+        w_aperture_area = w_aperture_area + aperture_area
+    elif ang_str == "NE":
+        ne_walls.append(f)
+        ne_wall_area = ne_wall_area + wall_area
+        ne_apertures = ne_apertures + apertures
+        ne_aperture_area = ne_aperture_area + aperture_area
+    elif ang_str == "NW":
+        nw_walls.append(f)
+        nw_wall_area = nw_wall_area + wall_area
+        nw_apertures = nw_apertures + apertures
+        nw_aperture_area = nw_aperture_area + aperture_area
+    elif ang_str == "SE":
+        se_walls.append(f)
+        se_wall_area = se_wall_area + wall_area
+        se_apertures = se_apertures + apertures
+        se_aperture_area = se_aperture_area + aperture_area
+    elif ang_str == "SW":
+        sw_walls.append(f)
+        sw_wall_area = sw_wall_area + wall_area
+        sw_apertures = sw_apertures + apertures
+        sw_aperture_area = sw_aperture_area + aperture_area
+
+if n_wall_area > 0:
+    n_ap_or = n_aperture_area / n_wall_area * 100
+else:
+    n_ap_or = 0
+if s_wall_area > 0:
+    s_ap_or = s_aperture_area / s_wall_area * 100
+else:
+    s_ap_or = 0
+if e_wall_area > 0:
+    e_ap_or = e_aperture_area / e_wall_area * 100
+else:
+    e_ap_or = 0
+if w_wall_area > 0:
+    w_ap_or = w_aperture_area / w_wall_area * 100
+else:
+    w_ap_or = 0
+if ne_wall_area > 0:
+    ne_ap_or = ne_aperture_area / ne_wall_area * 100
+else:
+    ne_ap_or = 0
+if nw_wall_area > 0:
+    nw_ap_or = nw_aperture_area / nw_wall_area * 100
+else:
+    nw_ap_or = 0
+if se_wall_area > 0:
+    se_ap_or = se_aperture_area / se_wall_area * 100
+else:
+    se_ap_or = 0
+if sw_wall_area > 0:
+    sw_ap_or = sw_aperture_area / sw_wall_area * 100
+else:
+    sw_ap_or = 0
+
+total_project_wall_area = s_wall_area + n_wall_area + ne_wall_area + nw_wall_area + sw_wall_area + se_wall_area
+total_project_aperture_area = n_aperture_area + s_aperture_area + e_aperture_area + w_aperture_area + ne_aperture_area + nw_aperture_area + se_aperture_area + sw_aperture_area
+
+n_ap_proj = n_aperture_area / total_project_wall_area * 100
+s_ap_proj = s_aperture_area / total_project_wall_area * 100
+e_ap_proj = e_aperture_area / total_project_wall_area * 100
+w_ap_proj = w_aperture_area / total_project_wall_area * 100
+ne_ap_proj = ne_aperture_area / total_project_wall_area * 100
+nw_ap_proj = nw_aperture_area / total_project_wall_area * 100
+se_ap_proj = se_aperture_area / total_project_wall_area * 100
+sw_ap_proj = sw_aperture_area / total_project_wall_area * 100
+
+total_ap_proj_percent = n_ap_proj+s_ap_proj+e_ap_proj+w_ap_proj+ne_ap_proj+nw_ap_proj+se_ap_proj+sw_ap_proj
+col_labels = ["Orientation", "Window Area", "Wall Area", "WWR By Orientation", "WWR By Project"]
+d = {"Orientation": ["E", "NE", "N", "NW", "W", "SW", "S", "SE", "Total"],
+    'Window Area': [round(e_aperture_area,2),
+                    round(ne_aperture_area,2),
+                    round(n_aperture_area,2),
+                    round(nw_aperture_area,2),
+                    round(w_aperture_area,2),
+                    round(sw_aperture_area,2),
+                    round(s_aperture_area,2),
+                    round(se_aperture_area,2),
+                    round(total_project_aperture_area,2)],
+    'Wall Area': [round(e_wall_area,2),
+                    round(ne_wall_area,2),
+                    round(n_wall_area,2),
+                    round(nw_wall_area,2),
+                    round(w_wall_area,2),
+                    round(sw_wall_area,2),
+                    round(s_wall_area,2),
+                    round(se_wall_area,2),
+                    round(total_project_wall_area,2)],
+    'WWR By Orientation': [round(e_ap_or,2),
+                            round(ne_ap_or,2),
+                            round(n_ap_or,2),
+                            round(nw_ap_or,2),
+                            round(w_ap_or,2),
+                            round(sw_ap_or,2),
+                            round(s_ap_or,2),
+                            round(se_ap_or,2),
+                            0],
+    'WWR By Project': [round(e_ap_proj,2),
+                        round(ne_ap_proj,2),
+                        round(n_ap_proj,2),
+                        round(nw_ap_proj,2),
+                        round(w_ap_proj,2),
+                        round(sw_ap_proj,2),
+                        round(s_ap_proj,2),
+                        round(se_ap_proj,2),
+                        round(total_ap_proj_percent,2)]}
+df = pd.DataFrame(data=d)
+with tab2:
+    st.write(df)
+d = {"Orientation": ["E", "NE", "N", "NW", "W", "SW", "S", "SE"],
+    'Window Area': [round(e_wall_area,2),
+                    round(ne_wall_area,2),
+                    round(n_wall_area,2),
+                    round(nw_wall_area,2),
+                    round(w_wall_area,2),
+                    round(sw_wall_area,2),
+                    round(s_wall_area,2),
+                    round(se_wall_area,2)]}
+
+with tab3:
+    col1, col2, col3, col4 = st.columns([1,1,1,1], gap="medium")
+    with col1:
+        d = {'Orientation': ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'],
+            'Window Area': [round(e_aperture_area,2),
+                            round(ne_aperture_area,2),
+                            round(n_aperture_area,2),
+                            round(nw_aperture_area,2),
+                            round(w_aperture_area,2),
+                            round(sw_aperture_area,2),
+                            round(s_aperture_area,2),
+                            round(se_aperture_area,2)]}
+        fig = go.Figure(go.Barpolar(r=d["Window Area"],
+                                    theta=d["Orientation"],
+                                    marker_color=['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple'],
+                                    marker_line_color="black",
+                                    marker_line_width=1,
+                                    opacity=0.8))
+        fig.update_layout(title="Window Area", margin=dict(l=10, r=10, t=24, b=2), polar = dict(
+        radialaxis = dict(showticklabels=False, ticks='')))
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+        d = {'Orientation': ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'],
+            'Wall Area': [round(e_wall_area,2),
+                            round(ne_wall_area,2),
+                            round(n_wall_area,2),
+                            round(nw_wall_area,2),
+                            round(w_wall_area,2),
+                            round(sw_wall_area,2),
+                            round(s_wall_area,2),
+                            round(se_wall_area,2)]}
+        fig = go.Figure(go.Barpolar(r=d["Wall Area"],
+                                    theta=d["Orientation"],
+                                    marker_color=['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple'],
+                                    marker_line_color="black",
+                                    marker_line_width=1,
+                                    opacity=0.8))
+        fig.update_layout(title="Wall Area", margin=dict(l=10, r=10, t=24, b=2), polar = dict(
+        radialaxis = dict(showticklabels=False, ticks='')))
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col3:
+        d = {'Orientation': ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'],
+            'WWR By Orient': [round(e_ap_or,2),
+                            round(ne_ap_or,2),
+                            round(n_ap_or,2),
+                            round(nw_ap_or,2),
+                            round(w_ap_or,2),
+                            round(sw_ap_or,2),
+                            round(s_ap_or,2),
+                            round(se_ap_or,2)]}
+        fig = go.Figure(go.Barpolar(r=d["WWR By Orient"],
+                                    theta=d["Orientation"],
+                                    marker_color=['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple'],
+                                    marker_line_color="black",
+                                    marker_line_width=1,
+                                    opacity=0.8))
+        fig.update_layout(title="WWR By Orientation", margin=dict(l=10, r=10, t=24, b=2), polar = dict(
+        radialaxis = dict(showticklabels=False, ticks='')))
+        
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col4:
+        d = {'Orientation': ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'],
+            'WWR By Project': [round(e_ap_proj,2),
                             round(ne_ap_proj,2),
                             round(n_ap_proj,2),
                             round(nw_ap_proj,2),
                             round(w_ap_proj,2),
                             round(sw_ap_proj,2),
                             round(s_ap_proj,2),
-                            round(se_ap_proj,2),
-                            round(total_ap_proj_percent,2)]}
-    df = pd.DataFrame(data=d)
-    with tab2:
-        st.write(df)
-    d = {"Orientation": ["E", "NE", "N", "NW", "W", "SW", "S", "SE"],
-        'Window Area': [round(e_wall_area,2),
-                        round(ne_wall_area,2),
-                        round(n_wall_area,2),
-                        round(nw_wall_area,2),
-                        round(w_wall_area,2),
-                        round(sw_wall_area,2),
-                        round(s_wall_area,2),
-                        round(se_wall_area,2)]}
-
-    with tab3:
-        col1, col2, col3, col4 = st.columns([1,1,1,1], gap="medium")
-        with col1:
-            d = {'Orientation': ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'],
-                'Window Area': [round(e_aperture_area,2),
-                                round(ne_aperture_area,2),
-                                round(n_aperture_area,2),
-                                round(nw_aperture_area,2),
-                                round(w_aperture_area,2),
-                                round(sw_aperture_area,2),
-                                round(s_aperture_area,2),
-                                round(se_aperture_area,2)]}
-            fig = go.Figure(go.Barpolar(r=d["Window Area"],
-                                        theta=d["Orientation"],
-                                        marker_color=['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple'],
-                                        marker_line_color="black",
-                                        marker_line_width=1,
-                                        opacity=0.8))
-            fig.update_layout(title="Window Area", margin=dict(l=10, r=10, t=24, b=2), polar = dict(
-            radialaxis = dict(showticklabels=False, ticks='')))
-            st.plotly_chart(fig, use_container_width=True)
-
-        with col2:
-            d = {'Orientation': ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'],
-                'Wall Area': [round(e_wall_area,2),
-                                round(ne_wall_area,2),
-                                round(n_wall_area,2),
-                                round(nw_wall_area,2),
-                                round(w_wall_area,2),
-                                round(sw_wall_area,2),
-                                round(s_wall_area,2),
-                                round(se_wall_area,2)]}
-            fig = go.Figure(go.Barpolar(r=d["Wall Area"],
-                                        theta=d["Orientation"],
-                                        marker_color=['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple'],
-                                        marker_line_color="black",
-                                        marker_line_width=1,
-                                        opacity=0.8))
-            fig.update_layout(title="Wall Area", margin=dict(l=10, r=10, t=24, b=2), polar = dict(
-            radialaxis = dict(showticklabels=False, ticks='')))
-            st.plotly_chart(fig, use_container_width=True)
-
-        with col3:
-            d = {'Orientation': ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'],
-                'WWR By Orient': [round(e_ap_or,2),
-                                round(ne_ap_or,2),
-                                round(n_ap_or,2),
-                                round(nw_ap_or,2),
-                                round(w_ap_or,2),
-                                round(sw_ap_or,2),
-                                round(s_ap_or,2),
-                                round(se_ap_or,2)]}
-            fig = go.Figure(go.Barpolar(r=d["WWR By Orient"],
-                                        theta=d["Orientation"],
-                                        marker_color=['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple'],
-                                        marker_line_color="black",
-                                        marker_line_width=1,
-                                        opacity=0.8))
-            fig.update_layout(title="WWR By Orientation", margin=dict(l=10, r=10, t=24, b=2), polar = dict(
-            radialaxis = dict(showticklabels=False, ticks='')))
-            
-            st.plotly_chart(fig, use_container_width=True)
-
-        with col4:
-            d = {'Orientation': ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'],
-                'WWR By Project': [round(e_ap_proj,2),
-                                round(ne_ap_proj,2),
-                                round(n_ap_proj,2),
-                                round(nw_ap_proj,2),
-                                round(w_ap_proj,2),
-                                round(sw_ap_proj,2),
-                                round(s_ap_proj,2),
-                                round(se_ap_proj,2)]}
-            fig = go.Figure(go.Barpolar(r=d["WWR By Project"],
-                                        theta=d["Orientation"],
-                                        marker_color=['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple'],
-                                        marker_line_color="black",
-                                        marker_line_width=1,
-                                        opacity=0.8))
-            fig.update_layout(title="WWR By Project", margin=dict(l=10, r=10, t=24, b=2), polar = dict(
-            radialaxis = dict(showticklabels=False, ticks='')))
-            st.plotly_chart(fig, use_container_width=True)
+                            round(se_ap_proj,2)]}
+        fig = go.Figure(go.Barpolar(r=d["WWR By Project"],
+                                    theta=d["Orientation"],
+                                    marker_color=['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple'],
+                                    marker_line_color="black",
+                                    marker_line_width=1,
+                                    opacity=0.8))
+        fig.update_layout(title="WWR By Project", margin=dict(l=10, r=10, t=24, b=2), polar = dict(
+        radialaxis = dict(showticklabels=False, ticks='')))
+        st.plotly_chart(fig, use_container_width=True)
