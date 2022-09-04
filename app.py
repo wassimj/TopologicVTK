@@ -144,7 +144,7 @@ if not c:
         st.session_state['topology'] = c
 if c:
     # Initialize Plotter
-    p = pv.Plotter(shape=(1,2))
+    p = pv.Plotter(window_size= [1024, 768], lighting='three lights')
     p.set_background('white')
 
     # Retrieve faces from session state
