@@ -1,5 +1,4 @@
 # Requirements for TopologicST
-vtk
 pyvista==0.36.1
 streamlit==1.12.0
 plotly
