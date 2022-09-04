@@ -1,6 +1,7 @@
 #--------------------------
 # IMPORT LIBRARIES
 import pyvista as pv
+from pyvista import examples
 import streamlit as st
 import streamlit.components.v1 as components
 import plotly.graph_objects as go
@@ -110,9 +111,8 @@ def pvMeshByTopology(topology=None):
         return (mesh)
 
 def pyvista_streamlit(plotter):
-    from pyvista import examples
     mesh = examples.load_uniform()
-    pyvista.start_xvfb()
+    pv.start_xvfb()
     pl = pyvista.Plotter(shape=(1,2))
     _ = pl.add_mesh(mesh, scalars='Spatial Point Data', show_edges=True)
     pl.subplot(0,1)
