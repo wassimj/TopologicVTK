@@ -144,8 +144,8 @@ if not c:
         st.session_state['topology'] = c
 if c:
     # Initialize Plotter
-    p = pv.Plotter(window_size= [1024, 768], lighting='three lights')
-    _ = p.set_background('white')
+    p = pv.Plotter(window_size= [900, 600], lighting='three lights')
+    _ = p.set_background('grey')
     _ = p.add_camera_orientation_widget()
 
     # Retrieve faces from session state
