@@ -10,7 +10,7 @@ import numpy as np
 from numpy import arctan, pi, signbit, arctan2, rad2deg
 from numpy.linalg import norm
 import pandas as pd
-
+import io
 
 # import topologic
 # This requires some checking of the used OS platform to load the correct version of Topologic
