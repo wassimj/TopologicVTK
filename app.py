@@ -220,8 +220,6 @@ if in_in_f_f:
 
 with tab1:
     # Draw the 3D view in tab 1
-    p.add_floor('-z', lighting=True, color='white', pad=1.0)
-    p.enable_shadows()
     pyvista_streamlit(p)
 
 n_walls = []
