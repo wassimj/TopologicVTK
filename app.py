@@ -145,7 +145,8 @@ if not c:
 if c:
     # Initialize Plotter
     p = pv.Plotter(window_size= [1024, 768], lighting='three lights')
-    p.set_background('white')
+    _ = p.set_background('white')
+    _ = p.add_camera_orientation_widget()
 
     # Retrieve faces from session state
     ex_ve_f, in_ve_f, to_ho_f, bo_ho_f, in_ho_f, ex_in_f, in_in_f, ex_ve_a, in_ve_a, to_ho_a, bo_ho_a, in_ho_a, ex_in_a, in_in_a = st.session_state['faceList']
