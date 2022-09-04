@@ -112,7 +112,7 @@ def pyvista_streamlit(plotter):
     plotter.reset_camera_clipping_range()
     #scene = plotter.show(jupyter_backend='pythreejs', return_viewer=True)
     html_file = io.StringIO()
-    plotter.export_html(html_file)
+    plotter.export_html(html_file, backend='panel')
     html_code = html_file.getvalue().decode('utf-8')
     components.html(html_code, height=1000)
 
@@ -136,7 +136,7 @@ if not c:
         st.session_state['topology'] = c
 if c:
     # Initialize Plotter
-    p = pv.Plotter(window_size=[900, 600], shape=(1,2))
+    p = pv.Plotter(window_size=[900, 600], shape=(9,6))
     p.set_background('white')
 
     # Retrieve faces from session state
