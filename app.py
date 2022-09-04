@@ -111,6 +111,7 @@ def pvMeshByTopology(topology=None):
         return mesh
 
 def pyvista_streamlit(plotter):
+    pv.start_xvfb()
     if os.path.exists("topologic_pyvista.html"):
         os.remove("topologic_pyvista.html")
     plotter.export_html('topologic_pyvista.html', backend='panel')
