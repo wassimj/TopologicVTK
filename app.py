@@ -163,7 +163,7 @@ if not c:
     p = pv.Plotter(window_size=[900, 900], lighting='three lights')
     centroid = c.Centroid()
     center = [centroid.X(), centroid.Y(), centroid.Z()]
-    normal = [1,1,0]
+    normal = [1,1,1]
     p.camera.focal_point = center
     p.camera.position = [sum(x) for x in zip(center, normal)]
     _ = p.set_background('lightgrey')
