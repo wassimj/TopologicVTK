@@ -223,13 +223,11 @@ for i, orient in enumerate(orientations):
     if len(faces) > 0:
         clus = topologic.Cluster.ByTopologies(faces)
         mesh_data = pvMeshByTopology(topology=clus)
-        mesh_data.clean()
         p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
         apertures = aperture_dict[orient]
         if len(apertures) > 0:
             clus = topologic.Cluster.ByTopologies(apertures)
             mesh_data = pvMeshByTopology(topology=clus)
-            mesh_data.clean()
             p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
 
 with tab1:
