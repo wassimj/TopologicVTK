@@ -113,6 +113,7 @@ def pvMeshByTopology(topology=None):
 
 def pyvista_streamlit(plotter):
     pv.start_xvfb()
+    p.reset_camera()
     if os.path.exists("topologic_pyvista.html"):
         os.remove("topologic_pyvista.html")
     plotter.export_html('topologic_pyvista.html', backend='panel')
@@ -160,6 +161,11 @@ if not c:
     c = topologies[0]
     st.session_state['topology'] = c
     p = pv.Plotter(window_size=[900, 900], lighting='three lights')
+    centroid = c.Centroid()
+    center = [centroid.X(), centroid.Y(), centroid.Z()]
+    normal = [1,1,0]
+    p.camera.focal_point = center
+    p.camera.position = center + normal
     _ = p.set_background('lightgrey')
     st.session_state['plotter'] = p
 else:
