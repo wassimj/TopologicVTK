@@ -230,12 +230,16 @@ for i, orient in enumerate(orientations):
     if len(faces) > 0:
         clus = topologic.Cluster.ByTopologies(faces)
         mesh_data = pvMeshByTopology(topology=clus)
-        p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+        p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=False, opacity=mesh_opacity, lighting=True)
+        edges = mesh_data.extract_feature_edges(0.2)
+        p.add_mesh(edges, color="black", line_width=2)
         apertures = aperture_dict[orient]
         if len(apertures) > 0:
             clus = topologic.Cluster.ByTopologies(apertures)
             mesh_data = pvMeshByTopology(topology=clus)
-            p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
+            p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=False, opacity=mesh_opacity, lighting=True)
+            edges = mesh_data.extract_feature_edges(0.2)
+            p.add_mesh(edges, color="black", line_width=2)
 
 with tab1:
     # Draw the 3D view in tab 1
