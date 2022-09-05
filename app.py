@@ -220,7 +220,9 @@ colors = ['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple']
 
 for i, orient in enumerate(orientations):
     faces = face_dict[orient]
+    print("faces", faces)
     clus = topologic.Cluster.ByTopologies(faces)
+    print("Cluster", clus)
     mesh_data = pvMeshByTopology(topology=clus)
     mesh_data.clean()
     p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
