@@ -115,6 +115,7 @@ def pvMeshByTopology(topology=None):
 def pyvista_streamlit(plotter):
     pv.start_xvfb()
     p.reset_camera()
+    p.enable_terrain_style(mouse_wheel_zooms=True, shift_pans=True)
     if os.path.exists("topologic_pyvista.html"):
         os.remove("topologic_pyvista.html")
     plotter.export_html('topologic_pyvista.html', backend='panel')
