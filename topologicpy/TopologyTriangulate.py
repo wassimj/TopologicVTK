@@ -13,7 +13,7 @@ def triangulateFace(face):
 
 def processItem(topology, tolerance):
 	t = topology.Type()
-	if (t == 1) or (t == 2) or (t == 4) or (t == 128):
+	if (t == 1) or (t == 2) or (t == 4):
 		return topology
 	if t == topologic.Face.Type():
 		topologyFaces = [topology]
@@ -31,3 +31,5 @@ def processItem(topology, tolerance):
 		return topologic.Cell.ByFaces(faceTriangles, tolerance)
 	elif t == 64: #CellComplex
 		return topologic.CellComplex.ByFaces(faceTriangles, tolerance)
+	elif t == 128: #Cluster
+		return topologic.Cluster.ByTopologies(faceTriangles)

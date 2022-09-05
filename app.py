@@ -101,6 +101,7 @@ def addApertures(p, f, north):
 
 def pvMeshByTopology(topology=None):
     if topology:
+        topology = TopologyTriangulate.processItem(topology, 0.0001)
         vertices, edges, faces = TopologyGeometry.processItem(topology)
         vertices = np.array(vertices)
         pv_faces = []
