@@ -94,9 +94,8 @@ def addApertures(p, f, north):
         dirA = FaceNormalAtParameters.processItem([f, 0.5, 0.5], "XYZ", 3)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
         for aperture in apertures:
-            aperture_dict[ang_str].append(aperture)
-            #mesh_data = pvMeshByTopology(topology=aperture)
-            #p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=1.0, lighting=True)
+            mesh_data = pvMeshByTopology(topology=aperture)
+            p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=1.0, lighting=True)
     return p
 
 def pvMeshByTopology(topology=None):
@@ -125,8 +124,6 @@ def pyvista_streamlit(plotter):
     except:
         pass
 
-face_dict = {'E':[], 'NE':[], 'N':[], 'NW':[], 'W':[], 'SW':[], 'S':[], 'SE':[]}
-aperture_dict = {'E':[], 'NE':[], 'N':[], 'NW':[], 'W':[], 'SW':[], 'S':[], 'SE':[]}
 # Initialize
 if 'topology' not in st.session_state:
     st.session_state['topology'] = None
@@ -173,62 +170,53 @@ ex_ve_f, in_ve_f, to_ho_f, bo_ho_f, in_ho_f, ex_in_f, in_in_f, ex_ve_a, in_ve_a,
 north = [0,1,0]
 if ex_ve_f_f:
     for f in ex_ve_f:
+        mesh_data = pvMeshByTopology(topology=f)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
-        face_dict[ang_str].append(f)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
         if apr_f:
             addApertures(p, f, north)
 if in_ve_f_f:
     for f in in_ve_f:
+        mesh_data = pvMeshByTopology(topology=f)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
-        face_dict[ang_str].append(f)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
         if apr_f:
             addApertures(p, f, north)
 if to_ho_f_f:
     for f in to_ho_f:
+        mesh_data = pvMeshByTopology(topology=f)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
-        face_dict[ang_str].append(f)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
         if apr_f:
             addApertures(p, f, north)
 if bo_ho_f_f:
     for f in bo_ho_f:
+        mesh_data = pvMeshByTopology(topology=f)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
-        face_dict[ang_str].append(f)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
         if apr_f:
             addApertures(p, f, north)
 if in_ho_f_f:
     for f in in_ho_f:
+        mesh_data = pvMeshByTopology(topology=f)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
-        face_dict[ang_str].append(f)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
         if apr_f:
             addApertures(p, f, north)
 if ex_in_f_f:
     for f in ex_in_f:
+        mesh_data = pvMeshByTopology(topology=f)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
-        face_dict[ang_str].append(f)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
         if apr_f:
             addApertures(p, f, north)
 if in_in_f_f:
     for f in in_in_f:
+        mesh_data = pvMeshByTopology(topology=f)
         ang, ang_str, color_str = faceAngleFromNorth(f, north)
-        face_dict[ang_str].append(f)
+        p.add_mesh(mesh_data, color=color_str, specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
         if apr_f:
             addApertures(p, f, north)
-
-orientations = ['E','NE','N','NW', 'W', 'SW', 'S','SE']
-colors = ['cyan', 'brown', 'white', 'red', 'green', 'blue', 'yellow', 'purple']
-
-
-for i, orient in enumerate(orientations):
-    faces = face_dict[orient]
-    clus = topologic.Cluster.ByTopology(faces)
-    mesh_data = pvMeshByTopology(topology=clus)
-    mesh_data.clean()
-    p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
-    apertures = aperture_dict[orient]
-    clus = topologic.Cluster.ByTopology(apertures)
-    mesh_data = pvMeshByTopology(topology=clus)
-    mesh_data.clean()
-    p.add_mesh(mesh_data, color=colors[i], specular=1.0, specular_power=10, show_edges=True, opacity=mesh_opacity, lighting=True)
 
 with tab1:
     # Draw the 3D view in tab 1
