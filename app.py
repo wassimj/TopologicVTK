@@ -165,7 +165,7 @@ if not c:
     center = [centroid.X(), centroid.Y(), centroid.Z()]
     normal = [1,1,0]
     p.camera.focal_point = center
-    p.camera.position = list( map(add, center, normal) )
+    p.camera.position = [sum(x) for x in zip(center, normal)]
     _ = p.set_background('lightgrey')
     st.session_state['plotter'] = p
 else:
