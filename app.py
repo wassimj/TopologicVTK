@@ -125,11 +125,10 @@ def pyvista_streamlit(plotter):
     html_file = open("topologic_pyvista.html", 'r', encoding='utf-8')
     html_code = html_file.read()
     st.download_button("Download HTML", html_code, file_name="topologic_pyvista.html", mime='text/plain')
-    plotter.export_vtkjs("topologic_pyvista.vtk")  
-    vtk_file = open("topologic_pyvista.vtk", 'r',)
+    plotter.export_vtkjs("topologic_pyvista.vtk")
+    vtk_file = open("topologic_pyvista.vtk", 'r')
     vtk_code = vtk_file.read()
     st.download_button("Download VTK", vtk_code, file_name="topologic_pyvista.vtk")
-    #html_code = html_file.getvalue().decode('utf-8')
     try:
         components.html(html_code, width=900, height=900)
     except:
