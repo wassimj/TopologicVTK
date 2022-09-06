@@ -128,7 +128,7 @@ def pyvista_streamlit(plotter):
     plotter.export_vtkjs("topologic_pyvista")
     vtk_file = open("topologic_pyvista.vtkjs", 'rb')
     vtk_code = vtk_file.read()
-    st.download_button("Download VTK", vtk_code, file_name="topologic_pyvista.vtk")
+    st.download_button("Download VTKJS", vtk_code, file_name="topologic_pyvista.vtkjs")
     try:
         components.html(html_code, width=900, height=900)
     except:
