@@ -126,7 +126,7 @@ def pyvista_streamlit(plotter):
     html_code = html_file.read()
     st.download_button("Download HTML", html_code, file_name="topologic_pyvista.html", mime='text/plain')
     plotter.export_vtkjs("topologic_pyvista")
-    vtk_file = open("topologic_pyvista.vtkjs", 'r')
+    vtk_file = open("topologic_pyvista.vtkjs", 'rb')
     vtk_code = vtk_file.read()
     st.download_button("Download VTK", vtk_code, file_name="topologic_pyvista.vtk")
     try:
