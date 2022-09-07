@@ -6,4 +6,4 @@ pandas
 numpy
 pythreejs
 panel
-ipywidgets
+ipywidgets==7.7.2

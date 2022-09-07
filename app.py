@@ -121,7 +121,8 @@ def pyvista_streamlit(plotter):
     plotter.enable_terrain_style(mouse_wheel_zooms=True, shift_pans=True)
     if os.path.exists("topologic_pyvista.html"):
         os.remove("topologic_pyvista.html")
-    plotter.export_html('topologic_pyvista.html', backend='panel')
+    plotter.export_html('topologic_pyvista.html', backend='pythreejs')
+    #plotter.export_html('topologic_pyvista.html', backend='panel')
     html_file = open("topologic_pyvista.html", 'r', encoding='utf-8')
     html_code = html_file.read()
     st.download_button("Download HTML", html_code, file_name="topologic_pyvista.html", mime='text/plain')
